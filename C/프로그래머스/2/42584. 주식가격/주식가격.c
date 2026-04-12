@@ -25,22 +25,16 @@ int is_full(Stack* s){
 int push(Stack* s,int val){
     if(!is_full(s))
         return s->data[++(s->top)]=val;
-    else
-        return -1;
 }
 
 int pop(Stack*s){
     if(!empty(s))
         return s->data[(s->top)--];
-    else
-        return -1;
 }
 
 int peek(Stack* s){
     if(!empty(s))
         return s->data[s->top];
-    else
-        return -1;
 }
 
 int* solution(int prices[], size_t prices_len) {
