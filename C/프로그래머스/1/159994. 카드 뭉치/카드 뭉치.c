@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
 
 typedef const char* element;
 
@@ -10,13 +9,6 @@ typedef struct {
     int front, rear;
     int capacity;
 } QueueType;
-
-// 오류 함수
-void error(char *message)
-{
-    fprintf(stderr, "%s\n", message);
-    exit(1);
-}
 
 // 초기화 (동적 할당)
 void init_queue(QueueType *q, int max_items)
@@ -94,8 +86,8 @@ char* solution(const char* cards1[], size_t cards1_len,
             dequeue(&q2);
         }
         else {
-            free_queue(&q1);
-            free_queue(&q2);
+            //free_queue(&q1);
+            //free_queue(&q2);
 
             char* answer = (char*)malloc(3);
             strcpy(answer, "No");
