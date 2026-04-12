@@ -26,29 +26,20 @@ int is_full(Struct* s){
 int push(Struct* s,int val){
     if(!is_full(s))
         return s->data[++(s->top)]=val;
-    else
-        return -1;
 }
 
 int pop(Struct* s){
     if(!empty(s))
         return s->data[(s->top)--];
-    else
-        return -1;
 }
 
 int peek(Struct* s){
     if(!empty(s))
         return s->data[s->top];
-    else
-        return -1;
 }
 
 void free_stack(Struct* s){
     free(s->data);
-    s->data=NULL;
-    s->top=-1;
-    s->capacity=0;
 }
 
 int solution(vector<vector<int>> board, vector<int> moves) {
