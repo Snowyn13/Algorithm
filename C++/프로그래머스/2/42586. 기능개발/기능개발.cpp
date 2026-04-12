@@ -44,7 +44,7 @@ int peek(Queue* q) {
 
 void free_queue(Queue* q) {
     free(q->data);
-    q->data = NULL;
+    //q->data = NULL;
 }
 
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
