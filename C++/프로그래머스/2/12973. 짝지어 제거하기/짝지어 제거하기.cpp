@@ -10,14 +10,6 @@ typedef struct{
     int capacity;
 }Stack;
 
-void init(Stack* s,int capacity);
-void free_stack(Stack* s);
-int empty(Stack* s);
-int is_full(Stack* s);
-void push(Stack* s,char val);
-char pop(Stack* s);
-char peek(Stack* s);
-
 void init(Stack* s,int capacity){
     s->data=(char *)malloc(sizeof(char)*capacity);
     s->top=-1;
