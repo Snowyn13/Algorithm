@@ -3,78 +3,89 @@
 
 using namespace std;
 
-struct Queue {
+typedef struct{
     int* data;
     int front;
     int rear;
     int capacity;
-};
+}Queue;
 
-void init_queue(Queue* q, int max_items) {
-    q->capacity = max_items + 1;
-    q->data = (int*)malloc(sizeof(int) * q->capacity);
+void init(Queue* q, int capacity)
+{
+    q->capacity = capacity + 1;
     q->front = 0;
     q->rear = 0;
+    q->data = (int*)malloc(sizeof(int) * q->capacity);
 }
 
-int queue_empty(Queue* q) {
+int empty_c(Queue* q)
+{
     return q->front == q->rear;
 }
 
-int queue_full(Queue* q) {
+int full_c(Queue* q)
+{
     return (q->rear + 1) % q->capacity == q->front;
 }
 
-void enqueue(Queue* q, int item) {
-    if (queue_full(q)) return;
-    q->rear = (q->rear + 1) % q->capacity;
-    q->data[q->rear] = item;
+void enqueue(Queue* q, int val)
+{
+    if (!full_c(q)) {
+        q->rear = (q->rear + 1) % q->capacity;
+        q->data[q->rear] = val;
+    }
+    else
+        return;
 }
 
-int dequeue(Queue* q) {
-    if (queue_empty(q)) return -1;
-    q->front = (q->front + 1) % q->capacity;
-    return q->data[q->front];
+int dequeue(Queue* q)
+{
+    if (!empty_c(q)) {
+        q->front = (q->front + 1) % q->capacity;
+        return q->data[q->front];
+    }
+    else
+        return -1;
 }
 
-int peek(Queue* q) {
-    if (queue_empty(q)) return -1;
-    return q->data[(q->front + 1) % q->capacity];
+int peek(Queue* q)
+{
+    if (!empty_c(q)) {
+        return q->data[(q->front + 1)%q->capacity];
+    }
+    else
+        return -1;
 }
 
-void free_queue(Queue* q) {
+void free_Q(Queue* q)
+{
     free(q->data);
-    //q->data = NULL;
 }
 
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
     vector<int> answer;
     Queue q;
 
-    init_queue(&q, progresses.size());
+    init(&q,progresses.size());
 
-    // 1. 작업 완료까지 걸리는 날짜 계산 → 큐 저장
     for (int i = 0; i < progresses.size(); i++) {
         int remain = 100 - progresses[i];
         int day = remain / speeds[i];
-        if (remain % speeds[i] != 0) day++;
-
+        if (remain % speeds[i] != 0)
+            day++;
         enqueue(&q, day);
     }
 
-    // 2. 배포 묶음 계산
-    while (!queue_empty(&q)) {
-        int deployDay = dequeue(&q);
-        int count = 1;
+    while (!empty_c(&q)) {
+        int c = 1;
+        int d = dequeue(&q);
 
-        while (!queue_empty(&q) && peek(&q) <= deployDay) {
+        while (!empty_c(&q) && peek(&q) <= d) {
+            c++;
             dequeue(&q);
-            count++;
         }
-
-        answer.push_back(count);
+        answer.push_back(c);
     }
-
-    free_queue(&q);
+    free_Q(&q);
     return answer;
 }
