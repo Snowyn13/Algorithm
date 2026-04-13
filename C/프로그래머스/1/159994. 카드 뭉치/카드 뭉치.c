@@ -86,9 +86,6 @@ char* solution(const char* cards1[], size_t cards1_len,
             dequeue(&q2);
         }
         else {
-            //free_queue(&q1);
-            //free_queue(&q2);
-
             char* answer = (char*)malloc(3);
             strcpy(answer, "No");
             return answer;
