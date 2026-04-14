@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <cstdlib>  // malloc, free 때문에 필요
 
 using namespace std;
 
@@ -34,7 +35,6 @@ void enqueue(Queue* q, int val)
         q->rear = (q->rear + 1) % q->capacity;
         q->data[q->rear] = val;
     }
-    else return;
 }
 
 int dequeue(Queue* q)
@@ -43,8 +43,7 @@ int dequeue(Queue* q)
         q->front = (q->front + 1) % q->capacity;
         return q->data[q->front];
     }
-    else
-        return -1;
+    return -1;
 }
 
 int peek(Queue* q)
@@ -52,8 +51,7 @@ int peek(Queue* q)
     if (!empty_q(q)) {
         return q->data[(q->front + 1) % q->capacity];
     }
-    else
-        return -1;
+    return -1;
 }
 
 void free_q(Queue* q)
@@ -64,13 +62,25 @@ void free_q(Queue* q)
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
     vector<int> answer;
 
-    Queue q;
-    init(&q, progresses.size());
+    int n = progresses.size();
 
-    for (int i = 0; i < progresses.size(); i++) {
-        int remain = 100 - progresses[i];
-        int day = remain / speeds[i];
-        if (remain % speeds[i] != 0)
+    // ✅ vector → C 배열로 변환 (추가된 부분)
+    int* prog = (int*)malloc(sizeof(int) * n);
+    int* spd = (int*)malloc(sizeof(int) * n);
+
+    for (int i = 0; i < n; i++) {
+        prog[i] = progresses[i];
+        spd[i] = speeds[i];
+    }
+
+    Queue q;
+    init(&q, n);
+
+    // ✅ 기존 코드 유지, 단지 prog/spd 사용
+    for (int i = 0; i < n; i++) {
+        int remain = 100 - prog[i];
+        int day = remain / spd[i];
+        if (remain % spd[i] != 0)
             day++;
 
         enqueue(&q, day);
@@ -86,6 +96,10 @@ vector<int> solution(vector<int> progresses, vector<int> speeds) {
         }
         answer.push_back(count);
     }
+
+    free(prog);
+    free(spd);
     free_q(&q);
+
     return answer;
 }
