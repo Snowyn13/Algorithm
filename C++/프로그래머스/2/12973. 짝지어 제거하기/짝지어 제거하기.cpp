@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstdlib>
-#include<string>
+#include <string>
 
 using namespace std;
 
@@ -8,32 +8,29 @@ typedef struct{
     char * data;
     int top;
     int capacity;
-}Stack;
+} Stack;
 
 void init(Stack* s,int capacity){
-    s->data=(char *)malloc(sizeof(char)*capacity);
-    s->top=-1;
-    s->capacity=capacity;
+    s->data = (char*)malloc(sizeof(char)*capacity);
+    s->top = -1;
+    s->capacity = capacity;
 }
 
 void free_stack(Stack* s){
     free(s->data);
-    s->data=NULL;
-    s->top=-1;
-    s->capacity=0;
 }
 
 int empty(Stack* s){
-    return s->top==-1;
+    return s->top == -1;
 }
 
 int is_full(Stack* s){
-    return s->top==s->capacity-1;
+    return s->top == s->capacity - 1;
 }
 
 void push(Stack* s,char val){
     if(!is_full(s))
-        s->data[++(s->top)]=val;
+        s->data[++(s->top)] = val;
 }
 
 char pop(Stack* s){
@@ -50,27 +47,27 @@ char peek(Stack* s){
 
 int solution(string s)
 {
-    int len=s.length();
-    int answer = -1;
-    
-    if(len%2!=0)
+    int len = s.length();
+
+    if(len % 2 != 0)
         return 0;
-    
+
     Stack stack;
-    init(&stack,len);
+    init(&stack, len);
     
-    for(int i=0;i<len;i++){
+    for(int i = 0; i < len; i++){
         char current = s[i];
         
-        if(!empty(&stack)&&peek(&stack)==current){
+        if(!empty(&stack) && peek(&stack) == current){
             pop(&stack);
         }
         else{
-            push(&stack,current);
+            push(&stack, current);
         }
     }
     
-    answer=empty(&stack)?1:0;
+    int answer = empty(&stack) ? 1 : 0;
+
     free_stack(&stack);
 
     return answer;
