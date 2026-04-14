@@ -26,16 +26,19 @@ int is_full(Struct* s){
 int push(Struct* s,int val){
     if(!is_full(s))
         return s->data[++(s->top)]=val;
+    return -1;
 }
 
 int pop(Struct* s){
     if(!empty(s))
         return s->data[(s->top)--];
+    return -1;
 }
 
 int peek(Struct* s){
     if(!empty(s))
         return s->data[s->top];
+    return -1;
 }
 
 void free_stack(Struct* s){
@@ -44,17 +47,35 @@ void free_stack(Struct* s){
 
 int solution(vector<vector<int>> board, vector<int> moves) {
     int answer = 0;
+    int n = board.size();
+    int m = moves.size();
+
+    // board를 C식 2차원 배열로 복사
+    int** arr = (int**)malloc(sizeof(int*) * n);
+    for(int i = 0; i < n; i++){
+        arr[i] = (int*)malloc(sizeof(int) * n);
+        for(int j = 0; j < n; j++){
+            arr[i][j] = board[i][j];
+        }
+    }
+
+    // moves를 C식 배열로 복사
+    int* moveArr = (int*)malloc(sizeof(int) * m);
+    for(int i = 0; i < m; i++){
+        moveArr[i] = moves[i];
+    }
+
     Struct s;
-    init(&s,board.size()*board.size());
-    
-    for(int i = 0; i < moves.size(); i++){
-        int col = moves[i] - 1;
-        
-        for(int row = 0; row < board.size(); row++){
-            if(board[row][col] != 0){
-                int doll = board[row][col];
-                board[row][col] = 0;
-                
+    init(&s, n * n);
+
+    for(int i = 0; i < m; i++){
+        int col = moveArr[i] - 1;
+
+        for(int row = 0; row < n; row++){
+            if(arr[row][col] != 0){
+                int doll = arr[row][col];
+                arr[row][col] = 0;
+
                 if(!empty(&s) && peek(&s) == doll){
                     pop(&s);
                     answer += 2;
@@ -62,12 +83,19 @@ int solution(vector<vector<int>> board, vector<int> moves) {
                 else{
                     push(&s, doll);
                 }
-                
+
                 break;
             }
         }
     }
-    
+
     free_stack(&s);
+
+    for(int i = 0; i < n; i++){
+        free(arr[i]);
+    }
+    free(arr);
+    free(moveArr);
+
     return answer;
 }
