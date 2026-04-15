@@ -29,6 +29,7 @@ void enqueue(Queue* q,int val){
         q->rear = (q->rear + 1) % q->capacity;
         q->data[q->rear] = val;
     }
+    else return;
 }
 
 int dequeue(Queue* q){
