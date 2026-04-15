@@ -36,13 +36,15 @@ void push(Stack* s,char val){
 char pop(Stack* s){
     if(!empty(s))
         return s->data[(s->top)--];
-    return '\0';
+    else
+        return '\0';
 }
 
 char peek(Stack* s){
     if(!empty(s))
         return s->data[s->top];
-    return '\0';
+    else
+        return '\0';
 }
 
 int solution(string s)
