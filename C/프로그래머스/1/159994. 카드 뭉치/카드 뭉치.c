@@ -2,13 +2,20 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-typedef const char* element;
 
-typedef struct queue{
+typedef char* element;
+typedef struct queue
+{
     element* data;
-    int front, rear;
+    int front;
+    int rear;
     int capacity;
 }Queue;
+
+void free_q(Queue* q)
+{
+    free_q(q->data);
+}
 
 void init(Queue* q, int capacity)
 {
@@ -18,23 +25,25 @@ void init(Queue* q, int capacity)
     q->rear=0;
 }
 
-int is_empty(Queue* q)
+int empty(Queue* q)
 {
     return q->front==q->rear;
 }
 
-int is_full(Queue* q)
+int full(Queue* q)
 {
     return (q->rear+1)%q->capacity==q->front;
 }
 
-void enqueue(Queue* q,element val)
+void enqueue(Queue* q, const element val)
 {
-    if(is_full(q)){
-        fprintf(stderr,"큐 포화 에러\n");
-        exit(1);
+    if(full(q))
+    {
+        fprintf(stderr,"큐 포화 에러 \n");
+        return;
     }
-    else{
+    else
+    {
         q->rear=(q->rear+1)%q->capacity;
         q->data[q->rear]=val;
     }
@@ -42,11 +51,13 @@ void enqueue(Queue* q,element val)
 
 element dequeue(Queue* q)
 {
-    if(is_empty(q)){
+    if(empty(q))
+    {
         fprintf(stderr,"큐 공백 에러\n");
         return NULL;
     }
-    else{
+    else
+    {
         q->front=(q->front+1)%q->capacity;
         return q->data[q->front];
     }
@@ -54,20 +65,15 @@ element dequeue(Queue* q)
 
 element peek(Queue* q)
 {
-    if(is_empty(q)){
+    if(empty(q))
+    {
         fprintf(stderr,"큐 공백 에러\n");
         return NULL;
     }
-    else{
-        return q->data[(q->front+1)%q->capacity];
-    }
+    else
+        return q->data[q->front+1%q->capacity];
 }
-
-void free_q(Queue* q)
-{
-    free(q->data);
-}
-
+    
 // cards1_len은 배열 cards1의 길이입니다.
 // cards2_len은 배열 cards2의 길이입니다.
 // goal_len은 배열 goal의 길이입니다.
@@ -76,7 +82,6 @@ char* solution(const char* cards1[], size_t cards1_len, const char* cards2[], si
     // return 값은 malloc 등 동적 할당을 사용해주세요. 할당 길이는 상황에 맞게 변경해주세요.
     Queue q1;
     Queue q2;
-    
     init(&q1,cards1_len);
     init(&q2,cards2_len);
     
@@ -88,11 +93,12 @@ char* solution(const char* cards1[], size_t cards1_len, const char* cards2[], si
     
     for(size_t i=0;i<goal_len;i++)
     {
-        if(!is_empty(&q1)&&strcmp(peek(&q1),goal[i])==0)
+        if(!empty(&q1)&&strcmp(peek(&q1),goal[i])==0)
             dequeue(&q1);
-        else if(!is_empty(&q2)&&strcmp(peek(&q2),goal[i])==0)
+        else if(!empty(&q2)&&strcmp(peek(&q2),goal[i])==0)
             dequeue(&q2);
-        else{
+        else
+        {
             free_q(&q1);
             free_q(&q2);
             
@@ -100,13 +106,10 @@ char* solution(const char* cards1[], size_t cards1_len, const char* cards2[], si
             strcpy(answer,"No");
             return answer;
         }
-            
-        
     }
-    
     free_q(&q1);
     free_q(&q2);
-            
+    
     char* answer = (char*)malloc(4);
     strcpy(answer,"Yes");
     return answer;
