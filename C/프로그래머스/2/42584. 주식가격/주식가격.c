@@ -1,58 +1,93 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
-typedef struct{
+typedef struct stack{
     int* data;
     int top;
     int capacity;
 }Stack;
 
-void init(Stack* s,int capacity){
-    s->top=-1;
-    s->data=(int*)malloc(sizeof(int)*capacity);
+void init(Stack* s,int capacity)
+{
     s->capacity=capacity;
+    s->data=(int*)malloc(sizeof(int)*s->capacity);
+    s->top=-1;
 }
 
-int empty(Stack* s){
+int is_empty(Stack* s)
+{
     return s->top==-1;
 }
 
-int is_full(Stack* s){
+int is_full(Stack* s)
+{
     return s->top==s->capacity-1;
 }
 
-int push(Stack* s,int val){
-    if(!is_full(s))
-        return s->data[++(s->top)]=val;
+void push(Stack* s, int val)
+{
+    if(is_full(s))
+    {
+        fprintf(stderr,"스택 포화 에러 \n");
+        return;
+    }
+    else
+        s->data[++(s->top)]=val;
 }
 
-int pop(Stack*s){
-    if(!empty(s))
+int pop(Stack* s)
+{
+    if(is_empty(s))
+    {
+        fprintf(stderr,"스택 공백 에러 \n");
+        return -1;
+    }
+    else
         return s->data[(s->top)--];
 }
 
-int peek(Stack* s){
-    if(!empty(s))
+int peek(Stack* s)
+{
+    if(is_empty(s))
+    {
+        fprintf(stderr,"스택 공백 에러\n");
+        return -1;
+    }
+    else
         return s->data[s->top];
 }
 
+void free_s(Stack* s)
+{
+    free(s->data);    
+}
+
+// prices_len은 배열 prices의 길이입니다.
 int* solution(int prices[], size_t prices_len) {
-    int* answer = (int*)malloc(sizeof(int)*prices_len);
+    // return 값은 malloc 등 동적 할당을 사용해주세요. 할당 길이는 상황에 맞게 변경해주세요.
     Stack s;
     init(&s,prices_len);
+    int* answer = (int*)malloc(sizeof(int)*prices_len);
     
-    for(int i=0;i<prices_len;i++){
-        while(!empty(&s)&&prices[i]<prices[peek(&s)]){
+    for(int i=0;i<prices_len;i++)
+    {
+        while(!is_empty(&s)&&prices[i]<prices[peek(&s)]){
             int topn=pop(&s);
             answer[topn]=i-topn;
         }
         push(&s,i);
     }
-    while(!empty(&s)){
-        int topn = pop(&s);
-        answer[topn] = prices_len - 1 - topn;
+    while(!is_empty(&s))
+    {
+        int topn=pop(&s);
+        answer[topn]=prices_len-1-topn;
     }
-    free(s.data);
+    free_s(&s);
+    return answer;
+    
+    
+    
+    
+    
     return answer;
 }
