@@ -1,13 +1,18 @@
 #include <string>
 #include <vector>
-using namespace std;
 
+using namespace std;
 typedef struct queue{
     int* data;
     int front;
     int rear;
     int capacity;
 }Queue;
+
+void free_q(Queue* q)
+{
+    free(q->data);
+}
 
 void init(Queue* q, int capacity)
 {
@@ -17,23 +22,25 @@ void init(Queue* q, int capacity)
     q->rear=0;
 }
 
-int empty_q(Queue* q)
+int empty(Queue* q)
 {
     return q->front==q->rear;
 }
 
-int full_q(Queue* q)
+int full(Queue* q)
 {
     return (q->rear+1)%q->capacity==q->front;
 }
 
-void enqueue(Queue* q, int val)
+void enqueue(Queue* q,int val)
 {
-    if(full_q(q)){
+    if(full(q))
+    {
         fprintf(stderr,"큐 포화 에러\n");
         return;
     }
-    else{
+    else
+    {
         q->rear=(q->rear+1)%q->capacity;
         q->data[q->rear]=val;
     }
@@ -41,11 +48,13 @@ void enqueue(Queue* q, int val)
 
 int dequeue(Queue* q)
 {
-    if(empty_q(q)){
-        fprintf(stderr,"큐 공백 에러\n");
+    if(empty(q))
+    {
+        fprintf(stderr,"큐 공백 에러 \n");
         return -1;
     }
-    else{
+    else
+    {
         q->front=(q->front+1)%q->capacity;
         return q->data[q->front];
     }
@@ -53,38 +62,37 @@ int dequeue(Queue* q)
 
 int peek(Queue* q)
 {
-    if(empty_q(q)){
+    if(empty(q))
+    {
         fprintf(stderr,"큐 공백 에러 \n");
         return -1;
     }
-    else{
+    else
         return q->data[(q->front+1)%q->capacity];
-    }
-}
-
-void free_q(Queue* q)
-{
-    free(q->data);
 }
 
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
     vector<int> answer;
     Queue q;
-    init(&q, progresses.size());
+    init(&q,progresses.size());
     
-    for(int i=0;i<progresses.size();i++){
+    for(int i=0;i<progresses.size();i++)
+    {
         int remain=100-progresses[i];
         int day=remain/speeds[i];
         if(remain%speeds[i]!=0)
             day++;
-        enqueue(&q, day);
+        enqueue(&q,day);
     }
-    while(!empty_q(&q)){
-        int a=dequeue(&q);
+    while(!empty(&q))
+    {
+        int d=dequeue(&q);
         int c=1;
-        while(!empty_q(&q)&&peek(&q)<=a){
-            dequeue(&q);
+        
+        while(!empty(&q)&&d>=peek(&q))
+        {
             c++;
+            dequeue(&q);
         }
         answer.push_back(c);
     }
