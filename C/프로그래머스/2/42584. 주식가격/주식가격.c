@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-typedef struct stack{
+
+typedef struct stack
+{
     int* data;
     int top;
     int capacity;
 }Stack;
+
+void free_s(Stack* s)
+{
+    free(s->data);
+}
 
 void init(Stack* s,int capacity)
 {
@@ -14,21 +21,21 @@ void init(Stack* s,int capacity)
     s->top=-1;
 }
 
-int is_empty(Stack* s)
+int empty(Stack* s)
 {
     return s->top==-1;
 }
 
-int is_full(Stack* s)
+int full(Stack* s)
 {
     return s->top==s->capacity-1;
 }
 
-void push(Stack* s, int val)
+void push(Stack* s,int val)
 {
-    if(is_full(s))
+    if(full(s))
     {
-        fprintf(stderr,"스택 포화 에러 \n");
+        fprintf(stderr,"스택 포화 에러\n");
         return;
     }
     else
@@ -37,9 +44,9 @@ void push(Stack* s, int val)
 
 int pop(Stack* s)
 {
-    if(is_empty(s))
+    if(empty(s))
     {
-        fprintf(stderr,"스택 공백 에러 \n");
+        fprintf(stderr,"스택 공백 에러\n");
         return -1;
     }
     else
@@ -48,18 +55,13 @@ int pop(Stack* s)
 
 int peek(Stack* s)
 {
-    if(is_empty(s))
+    if(empty(s))
     {
         fprintf(stderr,"스택 공백 에러\n");
         return -1;
     }
     else
-        return s->data[s->top];
-}
-
-void free_s(Stack* s)
-{
-    free(s->data);    
+        return s->data[(s->top)];
 }
 
 // prices_len은 배열 prices의 길이입니다.
@@ -71,23 +73,18 @@ int* solution(int prices[], size_t prices_len) {
     
     for(int i=0;i<prices_len;i++)
     {
-        while(!is_empty(&s)&&prices[i]<prices[peek(&s)]){
+        while(!empty(&s) && prices[i]<prices[peek(&s)])
+        {
             int topn=pop(&s);
             answer[topn]=i-topn;
         }
         push(&s,i);
     }
-    while(!is_empty(&s))
+    while(!empty(&s))
     {
         int topn=pop(&s);
         answer[topn]=prices_len-1-topn;
     }
     free_s(&s);
-    return answer;
-    
-    
-    
-    
-    
     return answer;
 }
