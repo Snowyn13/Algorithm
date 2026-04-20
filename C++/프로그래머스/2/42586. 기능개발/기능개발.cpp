@@ -1,5 +1,7 @@
 #include <string>
 #include <vector>
+
+using namespace std;
 typedef struct queue
 {
     int* data;
@@ -70,8 +72,6 @@ int peek(Queue* q)
         return q->data[(q->front+1)%q->capacity];
 }
 
-using namespace std;
-
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
     vector<int> answer;
     Queue q;
@@ -91,7 +91,7 @@ vector<int> solution(vector<int> progresses, vector<int> speeds) {
         int d=dequeue(&q);
         int count=1;
         
-        while(!empty(&q) && d>=peek(&q))
+        while(!empty(&q)&&d>=peek(&q))
         {
             count++;
             dequeue(&q);
