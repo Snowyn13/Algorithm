@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
 typedef struct stack
 {
     int* data;
@@ -9,16 +8,16 @@ typedef struct stack
     int capacity;
 }Stack;
 
-void free_s(Stack* s)
-{
-    free(s->data);
-}
-
-void init(Stack* s,int capacity)
+void init(Stack* s, int capacity)
 {
     s->capacity=capacity;
     s->data=(int*)malloc(sizeof(int)*s->capacity);
     s->top=-1;
+}
+
+void free_s(Stack* s)
+{
+    free(s->data);
 }
 
 int empty(Stack* s)
@@ -70,10 +69,9 @@ int* solution(int prices[], size_t prices_len) {
     Stack s;
     init(&s,prices_len);
     int* answer = (int*)malloc(sizeof(int)*prices_len);
-    
     for(int i=0;i<prices_len;i++)
     {
-        while(!empty(&s) && prices[i]<prices[peek(&s)])
+        while(!empty(&s)&&prices[i]<prices[peek(&s)])
         {
             int topn=pop(&s);
             answer[topn]=i-topn;
