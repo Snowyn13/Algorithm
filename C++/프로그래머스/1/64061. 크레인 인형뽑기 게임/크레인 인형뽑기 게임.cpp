@@ -70,20 +70,23 @@ int solution(vector<vector<int>> board, vector<int> moves) {
     int n=board.size();
     init(&s,n*n);
     
-    for(int i=0;i<moves.size();i++){
+    for(int i=0;i<moves.size();i++)
+    {
         int col=moves[i]-1;
-        for(int row=0;row<n;row++){
-            if(board[row][col]!=0){
+        for(int row=0;row<n;row++)
+        {
+            if(board[row][col]!=0)
+            {
                 int doll=board[row][col];
                 board[row][col]=0;
                 
-                if(!empty(&s)&&peek(&s)==doll){
+                if(!empty(&s)&&peek(&s)==doll)
+                {
                     pop(&s);
                     answer+=2;
                 }
-                else{
-                    push(&s,doll);   
-                }
+                else
+                    push(&s,doll);
                 break;
             }
         }
