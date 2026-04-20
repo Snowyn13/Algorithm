@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef char* element;
+typedef const char* element;
 typedef struct queue
 {
     element* data;
@@ -12,17 +12,17 @@ typedef struct queue
     int capacity;
 }Queue;
 
-void free_q(Queue* q)
-{
-    free_q(q->data);
-}
-
 void init(Queue* q, int capacity)
 {
     q->capacity=capacity+1;
     q->data=(element*)malloc(sizeof(element)*q->capacity);
     q->front=0;
     q->rear=0;
+}
+
+void free_q(Queue* q)
+{
+    free(q->data);
 }
 
 int empty(Queue* q)
@@ -39,7 +39,7 @@ void enqueue(Queue* q, const element val)
 {
     if(full(q))
     {
-        fprintf(stderr,"큐 포화 에러 \n");
+        fprintf(stderr,"큐 포화 에러\n");
         return;
     }
     else
@@ -53,7 +53,7 @@ element dequeue(Queue* q)
 {
     if(empty(q))
     {
-        fprintf(stderr,"큐 공백 에러\n");
+        fprintf(stderr,"큐 공백 에러 \n");
         return NULL;
     }
     else
@@ -67,13 +67,13 @@ element peek(Queue* q)
 {
     if(empty(q))
     {
-        fprintf(stderr,"큐 공백 에러\n");
+        fprintf(stderr,"큐 공백 에러 \n");
         return NULL;
     }
     else
-        return q->data[q->front+1%q->capacity];
+        return q->data[(q->front+1)%q->capacity];
 }
-    
+
 // cards1_len은 배열 cards1의 길이입니다.
 // cards2_len은 배열 cards2의 길이입니다.
 // goal_len은 배열 goal의 길이입니다.
@@ -85,13 +85,13 @@ char* solution(const char* cards1[], size_t cards1_len, const char* cards2[], si
     init(&q1,cards1_len);
     init(&q2,cards2_len);
     
-    for(size_t i=0;i<cards1_len;i++)
+    for(int i=0;i<cards1_len;i++)
         enqueue(&q1,cards1[i]);
     
-    for(size_t i=0;i<cards2_len;i++)
+    for(int i=0;i<cards2_len;i++)
         enqueue(&q2,cards2[i]);
     
-    for(size_t i=0;i<goal_len;i++)
+    for(int i=0;i<goal_len;i++)
     {
         if(!empty(&q1)&&strcmp(peek(&q1),goal[i])==0)
             dequeue(&q1);
@@ -103,14 +103,13 @@ char* solution(const char* cards1[], size_t cards1_len, const char* cards2[], si
             free_q(&q2);
             
             char* answer = (char*)malloc(3);
-            strcpy(answer,"No");
-            return answer;
+            return strcpy(answer,"No");
         }
+            
     }
     free_q(&q1);
     free_q(&q2);
-    
+
     char* answer = (char*)malloc(4);
-    strcpy(answer,"Yes");
-    return answer;
+    return strcpy(answer,"Yes");
 }
