@@ -2,16 +2,13 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-typedef struct stack{
+// 파라미터로 주어지는 문자열은 const로 주어집니다. 변경하려면 문자열을 복사해서 사용하세요.
+typedef struct stack
+{
     char* data;
     int top;
     int capacity;
 }Stack;
-
-void free_S(Stack* s)
-{
-    free(s->data);
-}
 
 void init(Stack* s, int capacity)
 {
@@ -20,19 +17,24 @@ void init(Stack* s, int capacity)
     s->top=-1;
 }
 
-int empty_S(Stack* s)
+void free_s(Stack* s)
+{
+    free(s->data);
+}
+
+int empty(Stack* s)
 {
     return s->top==-1;
 }
 
-int full_S(Stack* s)
+int full(Stack* s)   
 {
     return s->top==s->capacity-1;
 }
 
-void push(Stack* s,char val)
+void  push(Stack* s,char val)
 {
-    if(full_S(s))
+    if(full(s))
     {
         fprintf(stderr,"스택 포화 에러\n");
         return;
@@ -43,7 +45,7 @@ void push(Stack* s,char val)
 
 char pop(Stack* s)
 {
-    if(empty_S(s))
+    if(empty(s))
     {
         fprintf(stderr,"스택 공백 에러\n");
         return '\0';
@@ -54,13 +56,13 @@ char pop(Stack* s)
 
 char peek(Stack* s)
 {
-    if(empty_S(s))
+    if(empty(s))
     {
         fprintf(stderr,"스택 공백 에러\n");
         return '\0';
     }
     else
-        return s->data[(s->top)];
+        return s->data[s->top];
 }
 
 int match(char o, char c)
@@ -70,7 +72,7 @@ int match(char o, char c)
            (o=='[' && c==']');
 }
 
-int rotation(const char* a, int len, int start)
+int rotation(const char* a,int len, int start)
 {
     Stack s;
     init(&s,len);
@@ -82,28 +84,26 @@ int rotation(const char* a, int len, int start)
             push(&s,c);
         else
         {
-            if(empty_S(&s) || !match(peek(&s),c))
+            if(empty(&s) || !match(peek(&s),c))
             {
-                free_S(&s);
+                free_s(&s);
                 return 0;
             }
             pop(&s);
         }
     }
-    int result=empty_S(&s);
-    free_S(&s);
+    int result=empty(&s);
+    free_s(&s);
     return result;
+        
 }
 
-// 파라미터로 주어지는 문자열은 const로 주어집니다. 변경하려면 문자열을 복사해서 사용하세요.
+
 int solution(const char* s) {
     int answer = 0;
     int len=strlen(s);
-
     
     for(int i=0;i<len;i++)
-    {
         answer+=rotation(s,len,i);
-    }
     return answer;
 }
