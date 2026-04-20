@@ -1,8 +1,7 @@
 #include <string>
 #include <vector>
-
-using namespace std;
-typedef struct queue{
+typedef struct queue
+{
     int* data;
     int front;
     int rear;
@@ -32,7 +31,7 @@ int full(Queue* q)
     return (q->rear+1)%q->capacity==q->front;
 }
 
-void enqueue(Queue* q,int val)
+void enqueue(Queue* q, int val)
 {
     if(full(q))
     {
@@ -50,7 +49,7 @@ int dequeue(Queue* q)
 {
     if(empty(q))
     {
-        fprintf(stderr,"큐 공백 에러 \n");
+        fprintf(stderr,"큐 공백 에러\n");
         return -1;
     }
     else
@@ -64,12 +63,14 @@ int peek(Queue* q)
 {
     if(empty(q))
     {
-        fprintf(stderr,"큐 공백 에러 \n");
+        fprintf(stderr,"큐 공백 에러\n");
         return -1;
     }
     else
         return q->data[(q->front+1)%q->capacity];
 }
+
+using namespace std;
 
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
     vector<int> answer;
@@ -84,17 +85,18 @@ vector<int> solution(vector<int> progresses, vector<int> speeds) {
             day++;
         enqueue(&q,day);
     }
+    
     while(!empty(&q))
     {
         int d=dequeue(&q);
-        int c=1;
+        int count=1;
         
-        while(!empty(&q)&&d>=peek(&q))
+        while(!empty(&q) && d>=peek(&q))
         {
-            c++;
+            count++;
             dequeue(&q);
         }
-        answer.push_back(c);
+        answer.push_back(count);
     }
     free_q(&q);
     return answer;
