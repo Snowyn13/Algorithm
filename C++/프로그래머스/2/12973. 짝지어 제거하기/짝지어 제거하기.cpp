@@ -1,7 +1,6 @@
 #include <iostream>
 #include<string>
 using namespace std;
-
 typedef struct stack
 {
     char* data;
@@ -14,11 +13,11 @@ void free_s(Stack* s)
     free(s->data);
 }
 
-void init(Stack* s, int capacity)
+void init(Stack* s,int capacity)
 {
     s->capacity=capacity;
-    s->data=(char*)malloc(sizeof(char)*s->capacity);
     s->top=-1;
+    s->data=(char*)malloc(sizeof(char)*s->capacity);
 }
 
 int empty(Stack* s)
@@ -31,7 +30,7 @@ int full(Stack* s)
     return s->top==s->capacity-1;
 }
 
-void push(Stack* s,char val)
+void push(Stack* s, char val)
 {
     if(full(s))
     {
@@ -75,7 +74,7 @@ int solution(string s)
     for(int i=0;i<len;i++)
     {
         char c=s[i];
-        if(!empty(&st) && peek(&st)==c)
+        if(!empty(&st)&&c==peek(&st))
             pop(&st);
         else
             push(&st,c);
