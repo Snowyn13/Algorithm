@@ -4,7 +4,7 @@
 using namespace std;
 typedef struct queue
 {
-    int*  data;
+    int* data;
     int front;
     int rear;
     int capacity;
@@ -51,7 +51,7 @@ int dequeue(Queue* q)
 {
     if(empty(q))
     {
-        fprintf(stderr,"큐 공백 에러 \n");
+        fprintf(stderr,"큐 공백 에러\n");
         return -1;
     }
     else
@@ -65,7 +65,7 @@ int peek(Queue* q)
 {
     if(empty(q))
     {
-        fprintf(stderr,"큐 공백 에러");
+        fprintf(stderr,"큐 공백 에러 \n");
         return -1;
     }
     else
@@ -90,11 +90,10 @@ vector<int> solution(vector<int> progresses, vector<int> speeds) {
     {
         int d=dequeue(&q);
         int count=1;
-        
         while(!empty(&q)&&d>=peek(&q))
         {
-            dequeue(&q);
             count++;
+            dequeue(&q);
         }
         answer.push_back(count);
     }
