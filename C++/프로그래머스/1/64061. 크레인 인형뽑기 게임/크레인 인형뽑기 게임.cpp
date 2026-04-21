@@ -66,8 +66,9 @@ void free_s(Stack* s)
 
 int solution(vector<vector<int>> board, vector<int> moves) {
     int answer = 0;
-    Stack s;
     int n=board.size();
+    
+    Stack s;
     init(&s,n*n);
     
     for(int i=0;i<moves.size();i++)
@@ -82,15 +83,16 @@ int solution(vector<vector<int>> board, vector<int> moves) {
                 
                 if(!empty(&s)&&peek(&s)==doll)
                 {
-                    pop(&s);
                     answer+=2;
+                    pop(&s);
                 }
                 else
                     push(&s,doll);
                 break;
             }
+            
         }
     }
-    free_s(&s);
+    free(&s);
     return answer;
 }
