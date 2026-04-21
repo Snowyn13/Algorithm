@@ -85,15 +85,15 @@ vector<int> solution(vector<int> progresses, vector<int> speeds) {
             day++;
         enqueue(&q,day);
     }
-    
     while(!empty(&q))
     {
-        int d=dequeue(&q);
+        int d= dequeue(&q);
         int count=1;
+        
         while(!empty(&q)&&d>=peek(&q))
         {
-            count++;
             dequeue(&q);
+            count++;
         }
         answer.push_back(count);
     }
