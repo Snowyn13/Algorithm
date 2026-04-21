@@ -1,24 +1,23 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
 typedef struct stack
 {
+    char* data;
     int top;
     int capacity;
-    char* data;
 }Stack;
-
-void init(Stack* s,int capacity)
-{
-    s->capacity=capacity;
-    s->data=(char*)malloc(sizeof(char)*s->capacity);
-    s->top=-1;
-}
 
 void free_s(Stack* s)
 {
     free(s->data);
+}
+
+void init(Stack* s, int capacity)
+{
+    s->capacity=capacity;
+    s->data=(char*)malloc(sizeof(char)*s->capacity);
+    s->top=-1;
 }
 
 int empty(Stack* s)
@@ -31,11 +30,11 @@ int full(Stack* s)
     return s->top==s->capacity-1;
 }
 
-void push(Stack* s, char val)
+void push(Stack* s,char val)
 {
     if(full(s))
     {
-        fprintf(stderr,"스택 포화 에러 \n");
+        fprintf(stderr,"스택 포화 에러\n");
         return;
     }
     else
@@ -58,7 +57,7 @@ char peek(Stack* s)
     if(empty(s))
     {
         fprintf(stderr,"스택 공백 에러\n");
-        return'\0';
+        return '\0';
     }
     else
         return s->data[s->top];
@@ -72,18 +71,18 @@ int match(char o, char c)
 }
 
 int rotation(const char* a, int len, int start)
-{   
+{
     Stack s;
     init(&s,len);
     
     for(int off=0;off<len;off++)
     {
         char c=a[(start+off)%len];
-        if(c=='('||c=='['||c=='{')
+        if(c=='('||c=='{'||c=='[')
             push(&s,c);
         else
         {
-            if(empty(&s) || !match(peek(&s),c))
+            if(empty(&s)||!match(peek(&s),c))
             {
                 free_s(&s);
                 return 0;
