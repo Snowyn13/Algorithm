@@ -79,10 +79,10 @@ int solution(vector<vector<int>> board, vector<int> moves) {
                 int doll=board[row][col];
                 board[row][col]=0;
                 
-                if(!empty(&s)&&peek(&s)==doll)
+                if(!empty(&s)&&doll==peek(&s))
                 {
-                    pop(&s);
                     answer+=2;
+                    pop(&s);
                 }
                 else
                     push(&s,doll);
