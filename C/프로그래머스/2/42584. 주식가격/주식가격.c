@@ -60,7 +60,7 @@ int peek(Stack* s)
         return -1;
     }
     else
-        return s->data[(s->top)];
+        return s->data[s->top];
 }
 
 // prices_len은 배열 prices의 길이입니다.
