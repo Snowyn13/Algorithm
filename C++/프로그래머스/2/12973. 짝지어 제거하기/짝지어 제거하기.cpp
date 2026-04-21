@@ -74,13 +74,11 @@ int solution(string s)
     {
         char c=s[i];
         if(!empty(&st)&&peek(&st)==c)
-        {
             pop(&st);
-        }
         else
             push(&st,c);
     }
-    answer=empty(&st)?1:0;
     free_s(&st);
+    answer=empty(&st)?1:0;
     return answer;
 }
