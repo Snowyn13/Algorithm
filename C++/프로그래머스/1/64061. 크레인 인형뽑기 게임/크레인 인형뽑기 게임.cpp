@@ -9,28 +9,33 @@ typedef struct stack
     int capacity;
 }Stack;
 
-void init(Stack* s, int capacity)
+void init(Stack* s,int capacity)
 {
     s->capacity=capacity;
     s->data=(int*)malloc(sizeof(int)*s->capacity);
     s->top=-1;
 }
 
+void free_s(Stack* s)
+{
+    free(s->data);
+}
+
 int empty(Stack* s)
 {
     return s->top==-1;
 }
-    
+
 int full(Stack* s)
 {
     return s->top==s->capacity-1;
 }
 
-void push(Stack* s, int val)
+void push(Stack* s,int val)
 {
     if(full(s))
     {
-        fprintf(stderr,"스택 포화 에러 \n");
+        fprintf(stderr,"스택 포화 에러\n");
         return;
     }
     else
@@ -41,34 +46,27 @@ int pop(Stack* s)
 {
     if(empty(s))
     {
-        fprintf(stderr,"스택 공백 에러 \n");
+        fprintf(stderr,"스택 공백 에러\n");
         return -1;
     }
-    else
-        return s->data[(s->top)--];
+    return s->data[(s->top)--];
 }
 
 int peek(Stack* s)
 {
-    if(full(s))
+    if(empty(s))
     {
-        fprintf(stderr,"스택 공백 에러 \n");
-        return -1;
+        fprintf(stderr,"스택 공백 에러\n");
+        return  -1;
     }
     else
-        return s->data[(s->top)];
-}
-
-void free_s(Stack* s)
-{
-    free(s->data);
+        return s->data[s->top];
 }
 
 int solution(vector<vector<int>> board, vector<int> moves) {
     int answer = 0;
-    int n=board.size();
-    
     Stack s;
+    int n=board.size();
     init(&s,n*n);
     
     for(int i=0;i<moves.size();i++)
@@ -83,16 +81,15 @@ int solution(vector<vector<int>> board, vector<int> moves) {
                 
                 if(!empty(&s)&&peek(&s)==doll)
                 {
-                    answer+=2;
                     pop(&s);
+                    answer+=2;
                 }
                 else
                     push(&s,doll);
                 break;
             }
-            
         }
     }
-    free(&s);
+    free_s(&s);
     return answer;
 }
