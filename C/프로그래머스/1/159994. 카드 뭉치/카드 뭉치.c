@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
+
 // cards1_len은 배열 cards1의 길이입니다.
 // cards2_len은 배열 cards2의 길이입니다.
 // goal_len은 배열 goal의 길이입니다.
