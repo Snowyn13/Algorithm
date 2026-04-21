@@ -70,7 +70,7 @@ int match(char o, char c)
         (o=='{' && c=='}');
 }
 
-int rotation(const char* a, int len, int start)
+int rotation(const char* a,int len, int start)
 {
     Stack s;
     init(&s,len);
@@ -86,14 +86,13 @@ int rotation(const char* a, int len, int start)
             {
                 free_s(&s);
                 return 0;
-            }
+            }    
             pop(&s);
         }
     }
     free_s(&s);
     return empty(&s);
 }
-
 // 파라미터로 주어지는 문자열은 const로 주어집니다. 변경하려면 문자열을 복사해서 사용하세요.
 int solution(const char* s) {
     int answer = 0;
