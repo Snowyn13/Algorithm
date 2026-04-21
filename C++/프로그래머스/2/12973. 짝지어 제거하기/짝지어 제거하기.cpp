@@ -13,15 +13,15 @@ void free_s(Stack* s)
     free(s->data);
 }
 
-void init(Stack* s,int capacity)
+void init(Stack* s, int capacity)
 {
     s->capacity=capacity;
-    s->top=-1;
     s->data=(char*)malloc(sizeof(char)*s->capacity);
+    s->top=-1;
 }
 
 int empty(Stack* s)
-{
+{   
     return s->top==-1;
 }
 
@@ -60,22 +60,23 @@ char peek(Stack* s)
         return '\0';
     }
     else
-        return s->data[(s->top)];
+        return s->data[s->top];
 }
 
 int solution(string s)
 {
     int answer = -1;
     int len=s.length();
-    
     Stack st;
     init(&st,len);
     
     for(int i=0;i<len;i++)
     {
         char c=s[i];
-        if(!empty(&st)&&c==peek(&st))
+        if(!empty(&st)&&peek(&st)==c)
+        {
             pop(&st);
+        }
         else
             push(&st,c);
     }
