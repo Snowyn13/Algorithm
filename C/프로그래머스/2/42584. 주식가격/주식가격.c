@@ -79,7 +79,6 @@ int* solution(int prices[], size_t prices_len) {
         }
         push(&s,i);
     }
-    
     while(!empty(&s))
     {
         int topn=pop(&s);
