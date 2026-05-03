@@ -70,6 +70,20 @@ long long abs_value(long long value) {
     return value;
 }
 
+void free_tree(TreeNode* nodes, int n) {
+    for (int i = 0; i < n; i++) {
+        EdgeNode* cur = nodes[i].neighbors;
+
+        while (cur != NULL) {
+            EdgeNode* temp = cur;
+            cur = cur->next;
+            free(temp);
+        }
+    }
+
+    free(nodes);
+}
+
 // a_len은 배열 a의 길이입니다.
 // edges_rows는 2차원 배열 edges의 행 길이, edges_cols는 2차원 배열 edges의 열 길이입니다.
 long long solution(int a[], size_t a_len, int** edges, size_t edges_rows, size_t edges_cols) {
@@ -140,6 +154,10 @@ long long solution(int a[], size_t a_len, int** edges, size_t edges_rows, size_t
         nodes[cur].parent->value += nodes[cur].value;
         nodes[cur].value = 0;
     }
+
+    free(s.data);
+    free(order);
+    free_tree(nodes, a_len);
 
     return answer;
 }
