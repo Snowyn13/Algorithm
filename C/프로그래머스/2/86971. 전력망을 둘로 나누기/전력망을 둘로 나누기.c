@@ -2,25 +2,20 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-typedef struct EdgeNode {
-    int to;
-    struct EdgeNode* next;
-} EdgeNode;
-
 typedef struct TreeNode {
     int id;
-    int visited;
-    EdgeNode* neighbors;
+    struct TreeNode** neighbors;
+    int neighbor_count;
 } TreeNode;
 
 typedef struct StackType {
-    int* data;
+    TreeNode** data;
     int top;
     int capacity;
 } StackType;
 
 void stack_init(StackType* s, int capacity) {
-    s->data = (int*)malloc(sizeof(int) * capacity);
+    s->data = (TreeNode**)malloc(sizeof(TreeNode*) * capacity);
     s->top = -1;
     s->capacity = capacity;
 }
@@ -33,86 +28,82 @@ bool stack_full(StackType* s) {
     return s->top == s->capacity - 1;
 }
 
-void stack_push(StackType* s, int value) {
+void stack_push(StackType* s, TreeNode* node) {
     if (stack_full(s)) {
         return;
     }
 
-    s->data[++(s->top)] = value;
+    s->data[++(s->top)] = node;
 }
 
-int stack_pop(StackType* s) {
+TreeNode* stack_pop(StackType* s) {
     if (stack_empty(s)) {
-        return -1;
+        return NULL;
     }
 
     return s->data[(s->top)--];
 }
 
-void add_edge(TreeNode* nodes, int a, int b) {
-    EdgeNode* newNode = (EdgeNode*)malloc(sizeof(EdgeNode));
-    newNode->to = b;
-    newNode->next = nodes[a].neighbors;
-    nodes[a].neighbors = newNode;
-}
-
 int dfs_count(TreeNode* nodes, int n, int start, int cut_a, int cut_b) {
-    for (int i = 1; i <= n; i++) {
-        nodes[i].visited = 0;
-    }
+    bool* visited = (bool*)calloc(n + 1, sizeof(bool));
 
     StackType s;
     stack_init(&s, n + 1);
 
     int count = 0;
 
-    stack_push(&s, start);
-    nodes[start].visited = 1;
+    stack_push(&s, &nodes[start]);
+    visited[start] = true;
 
     while (!stack_empty(&s)) {
-        int cur = stack_pop(&s);
+        TreeNode* cur = stack_pop(&s);
         count++;
 
-        EdgeNode* edge = nodes[cur].neighbors;
+        for (int i = 0; i < cur->neighbor_count; i++) {
+            TreeNode* next = cur->neighbors[i];
 
-        while (edge != NULL) {
-            int next = edge->to;
-
-            if ((cur == cut_a && next == cut_b) ||
-                (cur == cut_b && next == cut_a)) {
-                edge = edge->next;
+            if ((cur->id == cut_a && next->id == cut_b) ||
+                (cur->id == cut_b && next->id == cut_a)) {
                 continue;
             }
 
-            if (!nodes[next].visited) {
-                nodes[next].visited = 1;
+            if (!visited[next->id]) {
+                visited[next->id] = true;
                 stack_push(&s, next);
             }
-
-            edge = edge->next;
         }
     }
 
     free(s.data);
+    free(visited);
 
     return count;
 }
 
 int solution(int n, int** wires, size_t wires_rows, size_t wires_cols) {
     TreeNode* nodes = (TreeNode*)malloc(sizeof(TreeNode) * (n + 1));
+    int* degree = (int*)calloc(n + 1, sizeof(int));
+
+    for (int i = 0; i < wires_rows; i++) {
+        int a = wires[i][0];
+        int b = wires[i][1];
+
+        degree[a]++;
+        degree[b]++;
+    }
 
     for (int i = 1; i <= n; i++) {
         nodes[i].id = i;
-        nodes[i].visited = 0;
-        nodes[i].neighbors = NULL;
+        nodes[i].neighbors = (TreeNode**)malloc(sizeof(TreeNode*) * degree[i]);
+        nodes[i].neighbor_count = 0;
     }
 
     for (int i = 0; i < wires_rows; i++) {
         int a = wires[i][0];
         int b = wires[i][1];
 
-        add_edge(nodes, a, b);
-        add_edge(nodes, b, a);
+        nodes[a].neighbors[nodes[a].neighbor_count++] = &nodes[b];
+        nodes[b].neighbors[nodes[b].neighbor_count++] = &nodes[a];
     }
 
     int answer = n;
@@ -133,6 +124,13 @@ int solution(int n, int** wires, size_t wires_rows, size_t wires_cols) {
             answer = diff;
         }
     }
+
+    for (int i = 1; i <= n; i++) {
+        free(nodes[i].neighbors);
+    }
+
+    free(degree);
+    free(nodes);
 
     return answer;
 }
